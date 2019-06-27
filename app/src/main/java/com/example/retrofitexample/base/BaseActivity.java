@@ -36,6 +36,7 @@ public class BaseActivity<VM extends ViewModel, DataBinding extends ViewDataBind
         viewModel = ViewModelProviders.of(this).get(vm);
         binding = DataBindingUtil.setContentView(this, layout);
         setListener();
+        setAdapter();
     }
 
     @Override
@@ -48,6 +49,10 @@ public class BaseActivity<VM extends ViewModel, DataBinding extends ViewDataBind
     }
 
     protected void setListener(){
+
+    }
+
+    protected void setAdapter(){
 
     }
 

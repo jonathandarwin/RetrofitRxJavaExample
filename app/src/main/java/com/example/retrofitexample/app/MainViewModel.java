@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainViewModel extends ViewModel {
@@ -23,27 +24,26 @@ public class MainViewModel extends ViewModel {
         gson = builder.create();
     }
 
-    private final static String BASE_URL = "http://www.omdbapi.com";
-
-    public LiveData<List<Movie>> getListMovie(){
+    public LiveData<List<Movie>> getListMovie(String search){
         final MutableLiveData<List<Movie>> result = new MutableLiveData<>();
         MovieRepository.getInstance(new APIHandler() {
             @Override
             public void onResponse(JSONObject response) {
                 try{
                     MovieResponse listMovie = gson.fromJson(response.toString(), MovieResponse.class);
-                    result.setValue(listMovie.getListMovie());
+                    result.setValue(listMovie.getListMovie() != null ? listMovie.getListMovie() : new ArrayList<Movie>());
                 }
                 catch(Exception e){
+                    result.setValue(new ArrayList<Movie>());
                     e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(String call) {
-                Log.d("masuksiniga", call);
+                result.setValue(new ArrayList<Movie>());
             }
-        }).getListMovie("social");
+        }).getListMovie(search);
 
         return result;
     }

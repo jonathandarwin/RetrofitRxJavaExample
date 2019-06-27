@@ -30,6 +30,7 @@ public class MovieRepository{
                     listener.onResponse(new JSONObject(response.body().string()));
                 }
                 catch (Exception e){
+                    listener.onFailure(e.getMessage());
                     e.printStackTrace();
                 }
             }

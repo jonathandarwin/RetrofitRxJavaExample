@@ -4,7 +4,12 @@ import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.ListAdapter;
 
 import com.example.retrofitexample.R;
 import com.example.retrofitexample.base.BaseActivity;
@@ -26,11 +31,33 @@ public class MainActivity extends BaseActivity<MainViewModel, MainActivityBindin
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setAdapter();
-        requestMovie();
+        requestMovie("social");
     }
 
-    private void setAdapter(){
+    @Override
+    protected void setListener() {
+        super.setListener();
+        getBinding().txtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                requestMovie(s.toString());
+            }
+        });
+    }
+
+    @Override
+    protected void setAdapter() {
+        super.setAdapter();
         listMovie = new ArrayList<>();
         adapter = new MainAdapter(this, listMovie);
         getBinding().recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -38,13 +65,17 @@ public class MainActivity extends BaseActivity<MainViewModel, MainActivityBindin
         getBinding().recyclerView.setAdapter(adapter);
     }
 
-    private void requestMovie(){
+    private void requestMovie(String search){
         getBinding().loading.setVisibility(View.VISIBLE);
-        getViewModel().getListMovie().observe(this, new Observer<List<Movie>>() {
+        listMovie.clear();
+        adapter.notifyDataSetChanged();
+        getViewModel().getListMovie(search).observe(this, new Observer<List<Movie>>() {
             @Override
             public void onChanged(@Nullable List<Movie> movies) {
-                getBinding().loading.setVisibility(View.GONE);
                 listMovie.clear();
+                getBinding().loading.setVisibility(View.GONE);
+                getBinding().setResult("Show " + movies.size() + " result(s)");
+                Log.d("masuksingia","size : " + movies.size());
                 if(movies.size() > 0){
                     listMovie.addAll(movies);
                     adapter.notifyDataSetChanged();
