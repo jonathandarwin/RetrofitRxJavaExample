@@ -1,4 +1,4 @@
-package com.example.retrofitexample.common;
+package com.example.retrofitexample.base;
 
 import android.app.AlertDialog;
 import android.arch.lifecycle.ViewModel;

@@ -1,18 +1,43 @@
 package com.example.retrofitexample.repository;
 
-import retrofit2.Retrofit;
+import com.example.retrofitexample.base.RetrofitUtil;
+import com.example.retrofitexample.common.APIHandler;
+import com.example.retrofitexample.common.APIRoute;
+import org.json.JSONObject;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class MovieRepository {
+public class MovieRepository{
 
-    private final static String BASE_URL = "http://www.omdbapi.com";
-    private static Retrofit retrofit;
+    private static MovieRepository instance;
+    private static APIHandler listener;
 
-    public static Retrofit getInstance(){
-        if(retrofit == null){
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .build();
-        }
-        return retrofit;
+    public static MovieRepository getInstance(APIHandler param){
+        if(instance == null)
+            instance = new MovieRepository();
+        listener = param;
+        return instance;
+    }
+
+    public void getListMovie(String param){
+        Call<ResponseBody> call = RetrofitUtil.getInstance().createOMBDService().getListMovie(APIRoute.API_KEY, param);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try{
+                    listener.onResponse(new JSONObject(response.body().string()));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                listener.onFailure(t.getMessage());
+            }
+        });
     }
 }

@@ -13,6 +13,11 @@ public class Movie extends BaseObservable {
     protected String Poster;
 
     @Bindable
+    public String getDisplayTitle(){
+        return getTitle() + " (" + getYear() + ")";
+    }
+
+    @Bindable
     public String getTitle() {
         return Title;
     }
@@ -66,4 +71,5 @@ public class Movie extends BaseObservable {
         notifyPropertyChanged(BR.poster);
         return this;
     }
+
 }
