@@ -75,7 +75,6 @@ public class MainActivity extends BaseActivity<MainViewModel, MainActivityBindin
                 listMovie.clear();
                 getBinding().loading.setVisibility(View.GONE);
                 getBinding().setResult("Show " + movies.size() + " result(s)");
-                Log.d("masuksingia","size : " + movies.size());
                 if(movies.size() > 0){
                     listMovie.addAll(movies);
                     adapter.notifyDataSetChanged();

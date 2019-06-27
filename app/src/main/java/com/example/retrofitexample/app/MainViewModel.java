@@ -3,7 +3,6 @@ package com.example.retrofitexample.app;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-import android.util.Log;
 import com.example.retrofitexample.common.APIHandler;
 import com.example.retrofitexample.datamodel.movie.MovieResponse;
 import com.example.retrofitexample.model.Movie;
