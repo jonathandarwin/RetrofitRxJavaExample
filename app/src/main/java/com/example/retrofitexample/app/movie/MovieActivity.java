@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import com.example.retrofitexample.R;
 import com.example.retrofitexample.base.BaseActivity;
@@ -13,9 +12,6 @@ import com.example.retrofitexample.databinding.MainActivityBinding;
 import com.example.retrofitexample.model.Movie;
 import java.util.ArrayList;
 import java.util.List;
-
-import rx.Observable;
-import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 

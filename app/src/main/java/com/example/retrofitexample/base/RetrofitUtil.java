@@ -2,11 +2,7 @@ package com.example.retrofitexample.base;
 
 import com.example.retrofitexample.common.APIRoute;
 import com.example.retrofitexample.repository.MovieRepository;
-import com.example.retrofitexample.repository.UserRepository;
-import com.google.gson.GsonBuilder;
-
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -23,7 +19,7 @@ public class RetrofitUtil {
         return instance;
     }
 
-    public MovieRepository.IMovieRepositoryObservable createOMBDService(){
+    public MovieRepository.IMovieRepository createOMBDService(){
         return new Retrofit.Builder()
                 .baseUrl(APIRoute.OMBD_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -35,15 +31,6 @@ public class RetrofitUtil {
                         .connectTimeout(30, TimeUnit.SECONDS)
                         .build())
                 .build()
-                .create(MovieRepository.IMovieRepositoryObservable.class);
-    }
-
-    public UserRepository.IUserRepository createReqresService(){
-        return new Retrofit.Builder()
-                .baseUrl(APIRoute.REQ_RES_BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build()
-                .create(UserRepository.IUserRepository.class);
+                .create(MovieRepository.IMovieRepository.class);
     }
 }
