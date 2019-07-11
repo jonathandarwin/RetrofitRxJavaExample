@@ -1,6 +1,5 @@
-package com.example.retrofitexample.app;
+package com.example.retrofitexample.app.movie;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,24 +7,25 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
-import android.widget.ListAdapter;
-
 import com.example.retrofitexample.R;
 import com.example.retrofitexample.base.BaseActivity;
 import com.example.retrofitexample.databinding.MainActivityBinding;
 import com.example.retrofitexample.model.Movie;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity<MainViewModel, MainActivityBinding> {
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
-    MainAdapter adapter;
+public class MovieActivity extends BaseActivity<MovieViewModel, MainActivityBinding> {
+
+    MovieAdapter adapter;
     List<Movie> listMovie;
 
-    public MainActivity(){
-        super(MainViewModel.class, R.layout.main_activity);
+    public MovieActivity(){
+        super(MovieViewModel.class, R.layout.main_activity);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity<MainViewModel, MainActivityBindin
     protected void setAdapter() {
         super.setAdapter();
         listMovie = new ArrayList<>();
-        adapter = new MainAdapter(this, listMovie);
+        adapter = new MovieAdapter(this, listMovie);
         getBinding().recyclerView.setLayoutManager(new LinearLayoutManager(this));
         getBinding().recyclerView.setHasFixedSize(true);
         getBinding().recyclerView.setAdapter(adapter);
@@ -69,9 +69,11 @@ public class MainActivity extends BaseActivity<MainViewModel, MainActivityBindin
         getBinding().loading.setVisibility(View.VISIBLE);
         listMovie.clear();
         adapter.notifyDataSetChanged();
-        getViewModel().getListMovie(search).observe(this, new Observer<List<Movie>>() {
-            @Override
-            public void onChanged(@Nullable List<Movie> movies) {
+
+        getViewModel().getListMovieObservable(search)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(movies -> {
                 listMovie.clear();
                 getBinding().loading.setVisibility(View.GONE);
                 getBinding().setResult("Show " + movies.size() + " result(s)");
@@ -79,7 +81,10 @@ public class MainActivity extends BaseActivity<MainViewModel, MainActivityBindin
                     listMovie.addAll(movies);
                     adapter.notifyDataSetChanged();
                 }
-            }
-        });
+            }, error -> {
+                listMovie.clear();
+                getBinding().loading.setVisibility(View.GONE);
+                getBinding().setResult("Show 0 result(s)");
+            });
     }
 }
