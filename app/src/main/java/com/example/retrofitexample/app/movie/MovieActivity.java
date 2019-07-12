@@ -72,7 +72,7 @@ public class MovieActivity extends BaseActivity<MovieViewModel, MainActivityBind
             .subscribe(movies -> {
                 listMovie.clear();
                 getBinding().loading.setVisibility(View.GONE);
-                getBinding().setResult("Show " + movies.size() + " result(s)");
+                getBinding().setResult(String.format(getResources().getString(R.string.text_show_result), movies.size()));
                 if(movies.size() > 0){
                     listMovie.addAll(movies);
                     adapter.notifyDataSetChanged();
@@ -80,7 +80,7 @@ public class MovieActivity extends BaseActivity<MovieViewModel, MainActivityBind
             }, error -> {
                 listMovie.clear();
                 getBinding().loading.setVisibility(View.GONE);
-                getBinding().setResult("Show 0 result(s)");
+                getBinding().setResult(String.format(getResources().getString(R.string.text_show_result), 0));
             });
     }
 }
